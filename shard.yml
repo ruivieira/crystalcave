@@ -5,3 +5,7 @@ authors:
   - Rui Vieira <ruidevieira@googlemail.com>
 
 license: MIT
+
+dependencies:
+  rss:
+    github: ruivieira/rss
