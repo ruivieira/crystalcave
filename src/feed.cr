@@ -6,6 +6,10 @@ class Item
 
   def initialize
     @title = ""
+    @link = ""
+    @pubDate = ""
+    @comments = ""
+    @description = ""
   end
 end
 
@@ -32,10 +36,31 @@ class RSS
     items = feed.xpath("//rss/channel/item").as(XML::NodeSet)
     result.items = items.map { |c|
       item = Item.new
-      title = c.xpath_node("title").as(XML::Node)
-      if title
-        item.title = title.text.as(String)
+      field = c.xpath_node("title")
+      if field
+        item.title = field.as(XML::Node).text.as(String)
       end
+
+      field = c.xpath_node("link")
+      if field
+        item.link = field.as(XML::Node).text.as(String)
+      end
+
+      field = c.xpath_node("pubDate")
+      if field
+        item.pubDate = field.as(XML::Node).text.as(String)
+      end
+
+      field = c.xpath_node("description")
+      if field
+        item.description = field.as(XML::Node).text.as(String)
+      end
+
+      field = c.xpath_node("comments")
+      if field
+        item.comments = field.as(XML::Node).text.as(String)
+      end
+
       item
     }
 
@@ -48,8 +73,11 @@ class RSS
   end
 end
 
-feed = RSS.parse "https://news.ycombinator.com/rss"
+feed1 = RSS.parse "https://news.ycombinator.com/rss"
+feed2 = RSS.parse "http://www.datatau.com/rss"
 
-puts feed.to_s
+feed1.items.each { |e| puts "title: #{e.title}\nlink: #{e.link}\npubDate: #{e.pubDate}\ndescription: #{e.description}\ncomments: #{e.comments}\n" + "---" }
 
-feed.items.each { |e| puts e.title }
+puts "="*80
+
+feed2.items.each { |e| puts "title: #{e.title}\nlink: #{e.link}\npubDate: #{e.pubDate}\ndescription: #{e.description}\ncomments: #{e.comments}\n" + "---" }
